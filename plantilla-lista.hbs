@@ -1,0 +1,41 @@
+<ul id="contenedor-lista" class="demo-list-icon mdl-list w-100">
+    {{#listaProductos}} {{!-- #each => inicio del each --}}
+    <li class="mdl-list__item">
+        <!-- Icono del producto -->
+        <span class="mdl-list__item-primary-content w-10">
+            <i class="material-icons mdl-list__item-icon">person</i>
+        </span>
+
+        <!-- Nombre del producto -->
+        <span class="mdl-list_item-primary-content w-30">
+            {{this.nombre}}
+        </span>
+
+        <!-- Cantidad del producto -->
+        <span class="mdl-list_item-primary-content w-20">
+            <div class="mdl-textfield mdl-js-textfield">
+                <input onchange="cambiarCantidad({{this.id}}, this)" class="mdl-textfield__input" type="text"
+                    id="cantidad-{{this.id}}" value="{{this.cantidad}}">
+                <label class="mdl-textfield__label" for="cantidad-{{this.id}}">Cantidad</label>
+            </div>
+        </span>
+
+        <!-- Precio del producto -->
+        <span class="mdl-list_item-primary-content w-20 ml-item">
+            <div class="mdl-textfield mdl-js-textfield">
+                <input onchange="cambiarPrecio({{this.id}}, this)" class="mdl-textfield__input" type="text"
+                    id="precio-{{this.id}}" value="{{this.precio}}">
+                <label class="mdl-textfield__label" for="precio-{{this.id}}">Precio($)</label>
+            </div>
+        </span>
+
+        <!-- Acción (borrar producto) -->
+        <span class="mdl-list_item-primary-content w-20 ml-item">
+            <button onclick="borrarProd({{this.id}})"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <i class="material-icons">remove_shopping_cart</i>
+            </button>
+        </span>
+    </li>
+    {{/listaProductos}} {{!-- /each => fin del each --}}
+</ul>

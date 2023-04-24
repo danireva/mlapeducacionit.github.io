@@ -37,3 +37,22 @@ Verifico que el service se encuentre disponible en los navegador que pienso que 
 ## Funcionamiento SW
 
 ![img-sw](_ref/Service-Worker03.png)
+
+# Motores plantillas
+
+### Handlebars
+
+<https://mustache.github.io/>
+
+<https://handlebarsjs.com/>
+
+### Descargar Handlebars
+
+<https://handlebarsjs.com/installation/#downloading-handlebars>
+
+# Mockapi
+Servidor backend de prueba. (Mockear un servidor backend y sus endpoints)
+
+<https://mockapi.io/>
+
+<https://615d8b5212571a00172076ba.mockapi.io/productos>

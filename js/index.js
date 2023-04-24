@@ -3,10 +3,10 @@
 /* --------------------------------------------------- */
 
 let listaProductos = [
-    { nombre: 'Carne', cantidad: 2, precio: 12.34 },
-    { nombre: 'Pan', cantidad: 3, precio: 34.56 },
-    { nombre: 'Fideos', cantidad: 4, precio: 45.78 },
-    { nombre: 'Leche', cantidad: 5, precio: 78.23 },
+    { id: 1, nombre: 'Carne', cantidad: 2, precio: 12.34 },
+    { id: 2, nombre: 'Pan', cantidad: 3, precio: 34.56 },
+    { id: 3, nombre: 'Fideos', cantidad: 4, precio: 45.78 },
+    { id: 4, nombre: 'Leche', cantidad: 5, precio: 78.23 },
 ]
 
 let crearLista = true
@@ -44,62 +44,34 @@ function cambiarPrecio(index, el) {
 function renderLista() {
     console.log('Render lista')
 
-    if(crearLista) {
-        ul = document.createElement('ul')
-        ul.classList.add('demo-list-icon', 'mdl-list', 'w-100')
-    }
+    /* ----------- petición plantilla con fetch ------------ */
 
-    ul.innerHTML = ''
+    let data = fetch('plantilla-lista.hbs')
 
-    listaProductos.forEach((prod, index) => {
-        console.log(index, prod)
-        ul.innerHTML += `
-        <li class="mdl-list__item">
+    data
+        .then(respuesta => {
+            console.log(respuesta)
+            return respuesta.text()
+        })
+        .then(plantilla => {
+            console.log(plantilla) // el string del contenido del archivo.
 
-            <!-- Icono del producto -->
-            <span class="mdl-list__item-primary-content w-10">
-                <i class="material-icons mdl-list__item-icon">person</i>
-            </span>
-        
-            <!-- Nombre del producto -->
-            <span class="mdl-list_item-primary-content w-30">
-                ${prod.nombre}
-            </span>
-        
-            <!-- Cantidad del producto -->
-            <span class="mdl-list_item-primary-content w-20">
-                <div class="mdl-textfield mdl-js-textfield">
-                    <input onchange="cambiarCantidad(${index}, this)" class="mdl-textfield__input" type="text" id="cantidad-${index}" value="${prod.cantidad}">
-                    <label class="mdl-textfield__label" for="cantidad-${index}">Cantidad</label>
-                </div>
-            </span>
-        
-            <!-- Precio del producto -->
-            <span class="mdl-list_item-primary-content w-20 ml-item">
-                <div class="mdl-textfield mdl-js-textfield">
-                    <input onchange="cambiarPrecio(${index}, this)" class="mdl-textfield__input" type="text" id="precio-${index}" value="${prod.precio}">
-                    <label class="mdl-textfield__label" for="precio-${index}">Precio($)</label>
-                </div>
-            </span>
-        
-            <!-- Acción (borrar producto) -->
-            <span class="mdl-list_item-primary-content w-20 ml-item">
-                <button onclick="borrarProd(${index})" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">remove_shopping_cart</i>
-                </button>
-            </span>
-        
-        </li>
-        `
-    })
+            /* ------------------- compilar la plantilla -------------- */
+            let template = Handlebars.compile(plantilla)
 
-    if(crearLista) {
-        document.getElementById('lista').appendChild(ul)
-    } else {
-        componentHandler.upgradeElements(ul)
-    }
+            /* -------------------- Ejecuto el template --------------- */
+            let html = template({listaProductos}) /* Le paso la data */
+            console.log(html) /* Tengo un string con la plantilla compilada. O sea la plantilla tiene la data */
+            
+            document.getElementById('lista').innerHTML = html
 
-    crearLista = false
+            /* Me refrescaba la librería material lite */
+            let ul = document.querySelector('#contenedor-lista')
+            componentHandler.upgradeElements(ul)
+        })
+        .catch( (error) => {
+            console.error('Error', error)
+        }) 
 }
 
 /* ------------------------------------------------------- */
@@ -165,12 +137,51 @@ function registrarServiceWorker() {
     }
 }
 
+/*  ---------------------------------------------------------- */
+/*  DEMO FUNCIONAMIENTO HBS                                    */
+/*  ---------------------------------------------------------- */
+
+function handlebarsTestFetch() {
+    console.warn('Holaaaaa handlebars')
+    fetch('plantilla-prueba.hbs')    
+        .then(respuesta => {
+            console.log(respuesta)
+            if(!respuesta.ok) throw respuesta
+            return respuesta.text()
+        })
+        .then(plantilla => {
+            console.log(plantilla) // <p>{{firstname}} {{lastname}}</p>
+
+            // compilamos el template
+            let template = Handlebars.compile(plantilla)
+            console.log(template) // acá tengo una referencia de una función
+
+            // ejecuto (invoco la función) el template y le paso la data dentro obj
+            let html = template({
+                firstname: "Alejandro",
+                lastname: "Di Stefano"
+            })
+
+            console.log(html)
+
+            const lista = document.querySelector('#lista')
+
+            console.log(lista)
+            lista.innerHTML = html
+
+        })
+        .catch(error => console.error(error))
+
+}
 
 function start() {
     console.log('Arrancando la aplicación')
 
     registrarServiceWorker()
     configurarListeners()
+
+    // handlebarsTestFetch()
+
     renderLista()
 }
 
