@@ -32,3 +32,8 @@ Verifico que el service se encuentre disponible en los navegador que pienso que 
 
 ## Service Worker MDN
 <https://developer.mozilla.org/es/docs/Web/API/Service_Worker_API>
+
+
+## Funcionamiento SW
+
+![img-sw](_ref/Service-Worker03.png)

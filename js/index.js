@@ -158,13 +158,12 @@ function registrarServiceWorker() {
                 console.log('El service worker se registró correctamente', reg)
             })
             .catch( err => {
-                console.error('Erro al registrar el service worker', err)
+                console.error('Error al registrar el service worker', err)
             })
     } else {
         console.error('serviceWorker no está disponible en el navegador')
     }
 }
-
 
 
 function start() {
