@@ -112,10 +112,16 @@ function configurarListeners() {
     btnBorrarProductos.addEventListener('click', () => {
         console.log('btn-borrar-productos')
 
-        if ( confirm('¿Desea borrar todos los productos?') ) { // confirm => true o false
+        /* if ( confirm('¿Desea borrar todos los productos?') ) { // confirm => true o false
             // listaProductos = []
             apiProd.deleteAll(listaProductos)
             renderLista()
+        } */
+
+        if (listaProductos.length) {
+            let dialog = $('dialog')[0]
+            //console.log(dialog)
+            dialog.showModal()
         }
 
     })
@@ -140,14 +146,46 @@ function registrarServiceWorker() {
     }
 }
 
+/* --------------------------------------------------------- */
+/* MODAL */
+/* --------------------------------------------------------- */
+
+function initDialog() {
+
+    let dialog = $('dialog')[0]
+    //console.log(dialog)
+
+        if(!dialog.showModal) {
+            dialogPolyfill.registerDialog(dialog)
+        }
+
+        //document.querySelector('dialog .aceptar').addEventListener('click', async () => {
+        $('dialog .aceptar').click( async () => {
+
+            await apiProd.deleteAll(listaProductos)
+
+            renderLista()
+            dialog.close()
+        })
+
+        $('dialog .cancelar').click( () => {
+            dialog.close()
+        })
+
+}
+
+
+
 function start() {
     console.log('Arrancando la aplicación')
 
     registrarServiceWorker()
     configurarListeners()
+    initDialog()
 
     renderLista()
 }
 
-
-start()
+// start()
+window.onload = start
+$(document).ready(start)
