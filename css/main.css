@@ -23,3 +23,9 @@
 .mdl-layout {
     min-width: 360px;
 }
+
+progress {
+    width: 100%;
+    height: 20px;
+    display: none;
+}

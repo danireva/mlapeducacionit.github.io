@@ -61,15 +61,32 @@ const apiProd = (function() {
     /* DELETE ALL */
 
     async function deleteAll(listProd) {
+        let progress = document.querySelector('progress')
+        progress.style.display = 'block'
+
+        let porcentaje = 0
 
 
         for (let i = 0; i < listProd.length; i++) {
+
+            porcentaje = parseInt((i * 100) / listaProductos.length) // 0 ... 100%
+            console.log(porcentaje)
+            progress.value = porcentaje
             
             let id = listProd[i].id
 
             await del(id)
             
         }
+
+        /* Terminó de procesar todo el for */
+        porcentaje = 100
+        console.log(porcentaje)
+        progress.value = porcentaje
+        
+        setTimeout(() => {
+            progress.style.display = 'none'
+        }, 2000)
 
     }
 
