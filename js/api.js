@@ -69,7 +69,7 @@ const apiProd = (function() {
 
         for (let i = 0; i < listProd.length; i++) {
 
-            porcentaje = parseInt((i * 100) / listaProductos.length) // 0 ... 100%
+            porcentaje = parseInt((i * 100) / listProd.length) // 0 ... 100%
             console.log(porcentaje)
             progress.value = porcentaje
             

@@ -39,7 +39,7 @@ async function cambiarValor(tipo, id, el) {
 }
 
 function renderLista() {
-    console.log('Render lista')
+    // console.log('Render lista')
 
     /* ----------- petición plantilla con fetch ------------ */
 
@@ -147,7 +147,7 @@ function registrarServiceWorker() {
 }
 
 /* --------------------------------------------------------- */
-/* MODAL */
+/* MODAL                                                     */
 /* --------------------------------------------------------- */
 
 function initDialog() {
@@ -162,7 +162,7 @@ function initDialog() {
         //document.querySelector('dialog .aceptar').addEventListener('click', async () => {
         $('dialog .aceptar').click( async () => {
 
-            await apiProd.deleteAll(listaProductos)
+            await apiProd.deleteAll(listProd)
 
             renderLista()
             dialog.close()
@@ -174,14 +174,110 @@ function initDialog() {
 
 }
 
+/* --------------------------------------------------------- */
+/* TEST CACHE                                                */
+/* --------------------------------------------------------- */
 
+function testCache() {
+    console.log('Empezando con caches')
+
+    if(window.caches) {
+        console.log('El Broser soporta Caches')
+
+        /* Creao espacios de caches (OPEN) */
+        caches.open('prueba-1')
+        /* caches.open('prueba-2') */
+        caches.open('prueba-3')
+        caches.open('prueba-4')
+        caches.open('prueba-5')
+
+        /* Comprobamos si un espacio de cache existe (HAS) | Devuelve una promesa */
+
+        console.log(caches.has('prueba-2'))
+
+        caches.has('prueba-2').then(respuesta => console.log('prueba-2: ', respuesta))  /* FALSE | me devuelve un boolean: true | false */
+        caches.has('prueba-3').then(console.log) /* TRUE */
+        // caches.has('prueba-3').then(alert) /* TRUE */
+
+
+        /* Borrar un espacio de chache (DELETE) */
+        caches.delete('prueba-1')
+
+        /* Listo todos los espacios de caches (KEYS) */
+
+        caches.keys().then(console.log).catch(console.log)
+
+        /* ----------------------------------------------------- */
+        /* Abro un espacio de cache y trabajo con él             */
+        /* ----------------------------------------------------- */
+
+        caches.open('cache-v1.1').then ( cache => {
+            console.log(cache) // Cache
+            console.log(caches) // CacheStorage
+
+            /* Agrego un recurso al cache (ADD) */
+
+            // cache.add('./index.html')
+
+            /* Agrego varios recursos al cache (addAll) */
+            /* Al método addAll() le tengo que pasar un [] */
+
+            cache.addAll([
+                './index.html',
+                './css/main.css',
+                './images/super.jpg'
+            ]).then( () => {
+                console.log('Recursos agregados')
+
+
+                /* Borro un recuro de la cache (DELETE) */
+
+                // cache.delete('./css/main.css').then(console.log)
+
+                cache.match('./css/main.css').then( respuesta => {
+                    if ( respuesta ) {
+                        console.log('Recurso encontrado')
+                    } else {
+                        console.error('Recuro inexistente')
+                    }
+                })
+
+                /* Creo o modifico el contenido de un recurso (PUT) */
+                
+                cache.put('./index.html', new Response('Hola mundo!'))
+
+                /* Listaar todos los recursos que contiene este cache */
+
+                // cache.keys().then(recursos => console.log('Recursos de cache', recursos))
+
+                cache.keys().then(recursos => {
+                    recursos.forEach( recurso => {
+                        console.log(recurso.url)
+                    })
+                })
+
+                caches.keys().then( nombres => {
+                    console.log('Nombres de caches: ', nombres)
+                })
+
+            })
+
+        })
+
+
+
+    }
+
+}
 
 function start() {
-    console.log('Arrancando la aplicación')
+    // console.log('Arrancando la aplicación')
 
     registrarServiceWorker()
     configurarListeners()
     initDialog()
+
+    testCache()
 
     renderLista()
 }
