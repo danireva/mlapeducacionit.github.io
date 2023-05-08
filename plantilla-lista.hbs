@@ -14,7 +14,7 @@
         <!-- Cantidad del producto -->
         <span class="mdl-list_item-primary-content w-20">
             <div class="mdl-textfield mdl-js-textfield">
-                <input onchange="cambiarCantidad({{this.id}}, this)" class="mdl-textfield__input" type="text"
+                <input onchange="cambiarValor('cantidad',{{this.id}}, this)" class="mdl-textfield__input" type="text"
                     id="cantidad-{{this.id}}" value="{{this.cantidad}}">
                 <label class="mdl-textfield__label" for="cantidad-{{this.id}}">Cantidad</label>
             </div>
@@ -23,7 +23,7 @@
         <!-- Precio del producto -->
         <span class="mdl-list_item-primary-content w-20 ml-item">
             <div class="mdl-textfield mdl-js-textfield">
-                <input onchange="cambiarPrecio({{this.id}}, this)" class="mdl-textfield__input" type="text"
+                <input onchange="cambiarValor('precio',{{this.id}}, this)" class="mdl-textfield__input" type="text"
                     id="precio-{{this.id}}" value="{{this.precio}}">
                 <label class="mdl-textfield__label" for="precio-{{this.id}}">Precio($)</label>
             </div>

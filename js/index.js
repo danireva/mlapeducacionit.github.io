@@ -2,11 +2,11 @@
 /*                 VARIABLE GLOBALES                   */
 /* --------------------------------------------------- */
 
-let listaProductos = [
+let listaProductos = [/* 
     { id: 1, nombre: 'Carne', cantidad: 2, precio: 12.34 },
     { id: 2, nombre: 'Pan', cantidad: 3, precio: 34.56 },
     { id: 3, nombre: 'Fideos', cantidad: 4, precio: 45.78 },
-    { id: 4, nombre: 'Leche', cantidad: 5, precio: 78.23 },
+    { id: 4, nombre: 'Leche', cantidad: 5, precio: 78.23 }, */
 ]
 
 let crearLista = true
@@ -16,29 +16,26 @@ let ul
 /*                FUNCIONES GLOBALES                   */
 /* --------------------------------------------------- */
 
-function borrarProd(index) {
+async function borrarProd(index) {
     console.log('borrarProd', index)
 
     // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-    listaProductos.splice(index, 1)
+    //listaProductos.splice(index, 1)
+    await apiProd.del(index)
     renderLista()
 }
 
+async function cambiarValor(tipo, id, el) {
 
-function cambiarCantidad(index, el) {
-    //console.log(el)
-    //console.dir(el)
-    let cantidad = parseInt(el.value)
-    console.log('cambiarCantidad', index, cantidad)
-    listaProductos[index].cantidad = cantidad
-}
+    let index = listaProductos.findIndex(prod => prod.id == id)
+    let valor = tipo == 'precio' ? Number(el.value) : parseInt(el.value)
+    console.log('cambiarValor', tipo, index, valor)
 
-function cambiarPrecio(index, el) {
-    //console.log(el)
-    //console.dir(el)
-    let precio = Number(el.value)
-    console.log('cambiarPrecio', index, precio)
-    listaProductos[index].precio = precio
+    listaProductos[index][tipo] = valor
+    
+    let prod = listaProductos[index]
+
+    await apiProd.put(prod, id)
 }
 
 function renderLista() {
@@ -53,15 +50,19 @@ function renderLista() {
             console.log(respuesta)
             return respuesta.text()
         })
-        .then(plantilla => {
-            console.log(plantilla) // el string del contenido del archivo.
+        .then(async plantilla => {
+            //console.log(plantilla) // el string del contenido del archivo.
 
             /* ------------------- compilar la plantilla -------------- */
             let template = Handlebars.compile(plantilla)
 
+            /* ------------------------- Obtengo la lista de productos del servidor remoto ------------------- */
+            listaProductos = await apiProd.get()
+            // console.warn({listaProductos})
+
             /* -------------------- Ejecuto el template --------------- */
             let html = template({listaProductos}) /* Le paso la data */
-            console.log(html) /* Tengo un string con la plantilla compilada. O sea la plantilla tiene la data */
+            //console.log(html) /* Tengo un string con la plantilla compilada. O sea la plantilla tiene la data */
             
             document.getElementById('lista').innerHTML = html
 
@@ -83,7 +84,7 @@ function configurarListeners() {
     const entradaProducto = document.getElementById("btn-entrada-producto")
     // console.log(entradaProducto)
 
-    entradaProducto.addEventListener('click', () => {
+    entradaProducto.addEventListener('click', async () => {
         console.log('btn-entrada-producto')
 
         let input = document.getElementById('ingreso-producto')
@@ -96,7 +97,8 @@ function configurarListeners() {
                 cantidad: 1, 
                 precio: 0
             }
-            listaProductos.push(objProd)
+            await apiProd.post(objProd)
+            //listaProductos.push(objProd)
             renderLista()
             input.value = null
         }
@@ -111,7 +113,8 @@ function configurarListeners() {
         console.log('btn-borrar-productos')
 
         if ( confirm('¿Desea borrar todos los productos?') ) { // confirm => true o false
-            listaProductos = []
+            // listaProductos = []
+            apiProd.deleteAll(listaProductos)
             renderLista()
         }
 
@@ -137,50 +140,11 @@ function registrarServiceWorker() {
     }
 }
 
-/*  ---------------------------------------------------------- */
-/*  DEMO FUNCIONAMIENTO HBS                                    */
-/*  ---------------------------------------------------------- */
-
-function handlebarsTestFetch() {
-    console.warn('Holaaaaa handlebars')
-    fetch('plantilla-prueba.hbs')    
-        .then(respuesta => {
-            console.log(respuesta)
-            if(!respuesta.ok) throw respuesta
-            return respuesta.text()
-        })
-        .then(plantilla => {
-            console.log(plantilla) // <p>{{firstname}} {{lastname}}</p>
-
-            // compilamos el template
-            let template = Handlebars.compile(plantilla)
-            console.log(template) // acá tengo una referencia de una función
-
-            // ejecuto (invoco la función) el template y le paso la data dentro obj
-            let html = template({
-                firstname: "Alejandro",
-                lastname: "Di Stefano"
-            })
-
-            console.log(html)
-
-            const lista = document.querySelector('#lista')
-
-            console.log(lista)
-            lista.innerHTML = html
-
-        })
-        .catch(error => console.error(error))
-
-}
-
 function start() {
     console.log('Arrancando la aplicación')
 
     registrarServiceWorker()
     configurarListeners()
-
-    // handlebarsTestFetch()
 
     renderLista()
 }
