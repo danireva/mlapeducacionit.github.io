@@ -18,8 +18,11 @@ const apiProd = (function() {
             let prods = await $.ajax({url: getUrl()})
             // console.log(prods)
             return prods
-       } catch (error) {
+       } catch (error) { // El trabajo sin conexión (Offline)
             console.error('Error get', error)
+            let prods = leerListaProductos()
+            console.log(prods)
+            return prods
        }
     }
 

@@ -2,10 +2,34 @@
 /*                 VARIABLE GLOBALES                   */
 /* --------------------------------------------------- */
 
-let listaProductos = []
+let listaProductos = leerListaProductos()
 
-let crearLista = true
-let ul
+/* --------------------------------------------------- */
+/*                 LOCAL STORAGE CACHE                 */ 
+/* --------------------------------------------------- */
+function guardarListaProductos(lista) {
+    let prods = JSON.stringify(lista)
+    localStorage.setItem('lista', prods)
+}
+
+function leerListaProductos() {
+    let lista = []
+    let prods = localStorage.getItem('lista') // string
+
+    if(prods) {
+        try {
+            lista = JSON.parse(prods) // paso de string a un obj de js
+            console.log('try', lista)
+        } catch (error) {
+            console.log('catch', lista)
+            lista = []
+            guardarListaProductos(lista)
+        }
+    }
+    return lista
+}
+
+
 
 /* --------------------------------------------------- */
 /*                FUNCIONES GLOBALES                   */
@@ -52,6 +76,9 @@ function renderLista() {
             /* ------------------------- Obtengo la lista de productos del servidor remoto ------------------- */
             listaProductos = await apiProd.get()
             // console.warn({listaProductos})
+
+            // Guardamos la lista de productos actual en el localstorage ( persisto en navegador )
+            guardarListaProductos(listaProductos)
 
             /* -------------------- Ejecuto el template --------------- */
             let html = template({listaProductos}) /* Le paso la data */
