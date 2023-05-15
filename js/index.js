@@ -2,12 +2,7 @@
 /*                 VARIABLE GLOBALES                   */
 /* --------------------------------------------------- */
 
-let listaProductos = [/* 
-    { id: 1, nombre: 'Carne', cantidad: 2, precio: 12.34 },
-    { id: 2, nombre: 'Pan', cantidad: 3, precio: 34.56 },
-    { id: 3, nombre: 'Fideos', cantidad: 4, precio: 45.78 },
-    { id: 4, nombre: 'Leche', cantidad: 5, precio: 78.23 }, */
-]
+let listaProductos = []
 
 let crearLista = true
 let ul
@@ -19,8 +14,6 @@ let ul
 async function borrarProd(index) {
     console.log('borrarProd', index)
 
-    // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-    //listaProductos.splice(index, 1)
     await apiProd.del(index)
     renderLista()
 }
@@ -111,12 +104,6 @@ function configurarListeners() {
 
     btnBorrarProductos.addEventListener('click', () => {
         console.log('btn-borrar-productos')
-
-        /* if ( confirm('¿Desea borrar todos los productos?') ) { // confirm => true o false
-            // listaProductos = []
-            apiProd.deleteAll(listaProductos)
-            renderLista()
-        } */
 
         if (listaProductos.length) {
             let dialog = $('dialog')[0]
@@ -277,11 +264,11 @@ function start() {
     configurarListeners()
     initDialog()
 
-    testCache()
+    //testCache()
 
     renderLista()
 }
 
 // start()
-window.onload = start
+// window.onload = start
 $(document).ready(start)
