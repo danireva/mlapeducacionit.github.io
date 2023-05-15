@@ -122,3 +122,32 @@ self.addEventListener('fetch', e => {
     }
 
 })
+
+/* Evento de SW push: Escucha las notificiaciones recibidas por el servidor de notificaciones */
+self.addEventListener('push', e => {
+    //console.log('push', e)
+    let datos = e.data.text()
+    console.log(datos)
+
+    const titulo = 'Súper lista'
+    const options = {
+        body: `Mensaje: ${datos}`,
+        icon: './images/icons/icon-72x72.png',
+        vibrate: [300, 100, 200, 100, 200, 100, 200]
+    }
+
+    
+    // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration
+    // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification
+    e.waitUntil(self.registration.showNotification(titulo, options))
+})
+
+/* Le agrega interacción a la notificación, cuando el usuario haga click voy hacer algo. */
+self.addEventListener('notificationclick', e => {
+    console.log('click en notificación recibida', e)
+
+    e.notification.close()
+    // https://developer.mozilla.org/en-US/docs/Web/API/Clients/openWindow
+    e.waitUntil(clients.openWindow('https://www.instagram.com'))
+})
+

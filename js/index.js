@@ -151,6 +151,20 @@ function registrarServiceWorker() {
         this.navigator.serviceWorker.register('sw.js') /* /sw.js */
             .then( reg => {
                 console.log('El service worker se registró correctamente', reg)
+
+
+                // Habilitar el funcionamiento de las notificaciones
+                // https://developer.mozilla.org/en-US/docs/Web/API/Notification
+
+                Notification.requestPermission( res => {
+                    console.warn(res)
+                    if ( res === 'granted' ) {
+                        navigator.serviceWorker.ready.then( res => {
+                            console.warn(reg)
+                        })
+                    }
+                })
+
             })
             .catch( err => {
                 console.error('Error al registrar el service worker', err)
