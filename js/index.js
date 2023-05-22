@@ -147,30 +147,35 @@ function configurarListeners() {
 /* --------------------------------------------------------- */
 
 function registrarServiceWorker() {
-    if ( 'serviceWorker' in navigator ) { // si no está el sw me daría false
-        this.navigator.serviceWorker.register('sw.js') /* /sw.js */
-            .then( reg => {
-                console.log('El service worker se registró correctamente', reg)
-
-
-                // Habilitar el funcionamiento de las notificaciones
-                // https://developer.mozilla.org/en-US/docs/Web/API/Notification
-
-                Notification.requestPermission( res => {
-                    console.warn(res)
-                    if ( res === 'granted' ) {
-                        navigator.serviceWorker.ready.then( res => {
-                            console.warn(reg)
-                        })
-                    }
+    if(window.caches) {
+        if ( 'serviceWorker' in navigator && 'PushManager' in window ) { // si no está el sw me daría false
+            console.log('Service worker y push están soportados')
+            this.navigator.serviceWorker.register('sw.js') /* /sw.js */
+                .then( reg => {
+                    console.log('El service worker se registró correctamente', reg)
+    
+    
+                    // Habilitar el funcionamiento de las notificaciones
+                    // https://developer.mozilla.org/en-US/docs/Web/API/Notification
+    
+                    Notification.requestPermission( res => {
+                        console.warn(res)
+                        if ( res === 'granted' ) {
+                            navigator.serviceWorker.ready.then( res => {
+                                console.warn(reg)
+                            })
+                        }
+                    })
+    
                 })
-
-            })
-            .catch( err => {
-                console.error('Error al registrar el service worker', err)
-            })
+                .catch( err => {
+                    console.error('Error al registrar el service worker', err)
+                })
+        } else {
+            console.error('serviceWorker y push no está disponible en el navegador')
+        }
     } else {
-        console.error('serviceWorker no está disponible en el navegador')
+        console.error('No tiene disponible las caches')
     }
 }
 
