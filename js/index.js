@@ -154,6 +154,7 @@ function registrarServiceWorker() {
                 .then( reg => {
                     console.log('El service worker se registró correctamente', reg)
     
+                    initialiseUI(reg)
     
                     // Habilitar el funcionamiento de las notificaciones
                     // https://developer.mozilla.org/en-US/docs/Web/API/Notification
