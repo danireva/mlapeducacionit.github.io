@@ -1,20 +1,24 @@
-const applicationServerPublicKey = 'BDEcCgdsTm9zzel8VNM33LVGGvOFg7vrg9aiJzy4mlXZPqK7_i2bDVasvuFDge7APfvhX1ykDqrxuJ1b_Y1YnhU'
+const applicationServerPublicKey = 'BOtgEWpiFRTDGRiIFOsmdV2FE5bcxoobxTRji_254Wi-iGYnKxeDXs_Vylm45woIf3gBW0E32-EevHAQhhi5JC4'
 
 /* 
 1. Generamos las VAPID KEYS: claves públia y privada para enviar notificaciones push (Las genera el web push)
 web-push generate-vapid-keys --json
-{"publicKey":"BDEcCgdsTm9zzel8VNM33LVGGvOFg7vrg9aiJzy4mlXZPqK7_i2bDVasvuFDge7APfvhX1ykDqrxuJ1b_Y1YnhU","privateKey":"Ee24LvLR_IgqbLHk75BOkhAJIVnL8eQ2ZgsFXhZ_K2Q"}
+{"publicKey":"BOtgEWpiFRTDGRiIFOsmdV2FE5bcxoobxTRji_254Wi-iGYnKxeDXs_Vylm45woIf3gBW0E32-EevHAQhhi5JC4","privateKey":"oIuDdJ6LXc_lCJ68aSiyjIkxLWTg-1DmGZT0ATKrK60"}
 */
 
 /* 
 2. Objeto de suscripción que genera nuestro front end, utilizando la clave pública provista por el web push
-{"endpoint":"https://fcm.googleapis.com/fcm/send/cWc9Q3bgSg4:APA91bEHkPCzt1bv3N2YLiS2SsNSKSmZM4LSxFDuFGcj5vmw41ASjHDx1Q1g5gkkkehx49NiIjMXQJ8ZZXnpVxMh6A71jJ-kCtpSrGml8eeHORbvpaCDYOG3RifIIRUf0V1c57kZHwAe","expirationTime":null,"keys":{"p256dh":"BNx-eO2KN5gKfW34fNAG6KRoLXu56BDbS5pdNLvEZP9qIWannXCOwX4O81_-6m3ohafGZVakfL3IpA8bB0gAQ7E","auth":"e7L9-wQTdCdCLcgqdgr8QQ"}}
+{"endpoint":"https://fcm.googleapis.com/fcm/send/fhnQErZ0kGs:APA91bEtYMSJz_IihO43SZQoADEEHD65eQkU-XSRzN1AYqmzDSuMyDQPgD1pHlkKVafe8SXW6q3wE1PFpra6EytY5RCmePUrbnFVNmyJFIqt_JUhFwkcmu22eT4NV35z3vCEFwfjWeCW","expirationTime":null,"keys":{"p256dh":"BPs326VyxMVRB9XotCtnm3SdUo8_klwl02njgpHX07QPXE3fKvRRoF7khcPkxxO4cCpKPVt5EbK1vFpjpmzjSec","auth":"ujnAPrNMBWs4fDHTRx8BzA"}}
 */
 
 /* 
 3. Comando de parte del server push para enviar una notificación al usuario suscipto, utiliza la información de suscripción enviada por el front end y las claves públicas y privadas generas por el web push
 
+DESDE web-push (app)
 web-push send-notification --endpoint="https://fcm.googleapis.com/fcm/send/cWc9Q3bgSg4:APA91bEHkPCzt1bv3N2YLiS2SsNSKSmZM4LSxFDuFGcj5vmw41ASjHDx1Q1g5gkkkehx49NiIjMXQJ8ZZXnpVxMh6A71jJ-kCtpSrGml8eeHORbvpaCDYOG3RifIIRUf0V1c57kZHwAe" --key="BNx-eO2KN5gKfW34fNAG6KRoLXu56BDbS5pdNLvEZP9qIWannXCOwX4O81_-6m3ohafGZVakfL3IpA8bB0gAQ7E" --auth="e7L9-wQTdCdCLcgqdgr8QQ" --payload="Hola tarolas desde el web push 2!!!" --ttl=0 --vapid-subject="mailto: mlapeducacionit@gmail.com" --vapid-pubkey="BDEcCgdsTm9zzel8VNM33LVGGvOFg7vrg9aiJzy4mlXZPqK7_i2bDVasvuFDge7APfvhX1ykDqrxuJ1b_Y1YnhU" --vapid-pvtkey="Ee24LvLR_IgqbLHk75BOkhAJIVnL8eQ2ZgsFXhZ_K2Q"
+
+DESDE web-push (node.js)
+node src/cli send-notification --endpoint="https://fcm.googleapis.com/fcm/send/fhnQErZ0kGs:APA91bEtYMSJz_IihO43SZQoADEEHD65eQkU-XSRzN1AYqmzDSuMyDQPgD1pHlkKVafe8SXW6q3wE1PFpra6EytY5RCmePUrbnFVNmyJFIqt_JUhFwkcmu22eT4NV35z3vCEFwfjWeCW" --key="BPs326VyxMVRB9XotCtnm3SdUo8_klwl02njgpHX07QPXE3fKvRRoF7khcPkxxO4cCpKPVt5EbK1vFpjpmzjSec" --auth="ujnAPrNMBWs4fDHTRx8BzA" --payload="Hola tarolas desde el web push 2!!!" --ttl=0 --vapid-subject="mailto: mlapeducacionit@gmail.com" --vapid-pubkey="BOtgEWpiFRTDGRiIFOsmdV2FE5bcxoobxTRji_254Wi-iGYnKxeDXs_Vylm45woIf3gBW0E32-EevHAQhhi5JC4" --vapid-pvtkey="oIuDdJ6LXc_lCJ68aSiyjIkxLWTg-1DmGZT0ATKrK60"
 
 */
 
